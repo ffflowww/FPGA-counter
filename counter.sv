@@ -10,8 +10,8 @@ module counter #(
     output logic [4:0] o_data // port(bus): output value
 );
     
-    localparam p_min_value = 5'b 00000;  //  parameter minimum value
-    localparam p_max_value = 5'b 10000;  //  parameter maximum value
+    localparam p_min_value = 5'b00000;  // parameter minimum value
+    localparam p_max_value = 5'b10000;  // parameter maximum value
     
     always_ff @(posedge i_clk, negedge i_reset) begin
         /* reset logic */
@@ -28,7 +28,7 @@ module counter #(
             //increment till p_max logic
             if (i_count == 1) begin
                 if (o_data >= p_max_value) o_data <= p_min_value;
-                else o_data <= o_data + 1;                               
+                else o_data <= o_data + 5'd1;                               
             end else begin  // left shift logic
                 o_data[4:1] <= o_data[3:0];
                 o_data[0] <= o_data[4];

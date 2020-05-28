@@ -9,13 +9,9 @@ module test;
     logic i_count;
     logic i_type;
     
-    logic [6:0] o_HEX0;
-    logic [6:0] o_HEX1;
-    logic [6:0] o_HEX2;
-    logic [6:0] o_HEX3;
-    logic [6:0] o_HEX4;
+    logic [6:0] o_HEXs[4:0];
     
-    logic [4:0] o_LEDS;
+    logic [4:0] o_LEDs;
     logic o_sync_clock;
     
     parameter Initial = 5'b 01001;

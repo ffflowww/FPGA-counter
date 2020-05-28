@@ -9,18 +9,21 @@ module top_entity #(
     input logic i_count,  // port: HIGH - increment (LOW - shift to the left)
     input logic i_type,  // port: signal HIGH - DEC, otherwise - BIN 
     
-    output logic [6:0] o_HEX0,
-    output logic [6:0] o_HEX1,
-    output logic [6:0] o_HEX2,
-    output logic [6:0] o_HEX3,
-    output logic [6:0] o_HEX4,
-    output logic [4:0] o_LEDS,
+//    output logic [6:0] o_HEX0,
+//    output logic [6:0] o_HEX1,
+//    output logic [6:0] o_HEX2,
+//    output logic [6:0] o_HEX3,
+//    output logic [6:0] o_HEX4,
+    output logic [6:0] o_HEXs[4:0],
+    output logic [4:0] o_LEDs,
     output logic o_sync_clock  // right clock
     );
     
     // inner wires
     logic [4:0] w_data;  // wire between modules
     logic w_clock;  // wire between clock devider and counter
+    logic [6:0] w_bin_HEXs[4:0];
+    logic [6:0] w_dec_HEXs[4:0];
     assign o_sync_clock = w_clock;
     
     // Modules
@@ -45,16 +48,32 @@ module top_entity #(
         .o_data(w_data)
     );
     
-    rsp main_rsp (   
+    led_decoder main_led_decoder (   
         .i_data(w_data),
-        .i_type(i_type),
         
-        .o_HEX0(o_HEX0),
-        .o_HEX1(o_HEX1),
-        .o_HEX2(o_HEX2),
-        .o_HEX3(o_HEX3),
-        .o_HEX4(o_HEX4),
-        .o_LEDS(o_LEDS)
+        .o_LEDs
     );
+    
+    bin_decoder main_bin_decoder (   
+        .i_data(w_data),
+        
+        .o_bin_HEXs(w_bin_HEXs)
+    );
+    
+    dec_decoder main_dec_decoder (   
+        .i_data(w_data),
+        
+        .o_dec_HEXs(w_dec_HEXs)
+    );
+    
+    multiplexer main_multiplexer(
+        .i_bin_HEXs(w_bin_HEXs),
+        .i_dec_HEXs(w_dec_HEXs),
+        .i_type,
+        
+        .o_HEXs
+);
+    
+    
 
 endmodule
