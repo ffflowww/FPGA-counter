@@ -8,7 +8,7 @@ module clock_divider #(
 );
    
     localparam logic [31:0] lp_max_clock_buf = 50000000 / (Frequency * 2);
-    logic [31:0] clock_buf;  // buffer for clock
+    logic [31:0] clock_buf = 0;  // buffer for clock
    
     always_ff @(posedge i_clock_50mhz) begin
         /* reset logic */
