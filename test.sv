@@ -1,5 +1,4 @@
 `timescale 1ns/1ns
-// test programm
 module test;
     
     logic i_clock_50mhz;
@@ -10,14 +9,13 @@ module test;
     logic i_type;
     
     logic [6:0] o_HEXs[4:0];
-    
     logic [4:0] o_LEDs;
     logic o_sync_clock;
     
     parameter Initial = 5'b 01001;
     parameter Frequency = 1000000;
     
-    localparam logic [31:0] lp_max_clock_buf = 50000000 / (Frequency * 2);
+    localparam logic [31:0] MaxClockBuf = 50000000 / (Frequency * 2);
     
     top_entity #(
         .Frequency(Frequency),
@@ -40,16 +38,16 @@ module test;
             
             // block 2 - signals' vectors
             begin
-                #(15*lp_max_clock_buf) i_reset <= ~i_reset;
-                #(40*lp_max_clock_buf) i_reset <= ~i_reset;
-                #(60*lp_max_clock_buf) i_set <= ~i_set;
-                #(80*lp_max_clock_buf) i_set <= ~i_set;
-                #(130*lp_max_clock_buf) i_pause <= ~i_pause;
-                #(170*lp_max_clock_buf) i_pause <= ~i_pause;
-                #(230*lp_max_clock_buf) i_type <= ~i_type;
-                #(300*lp_max_clock_buf) i_count <= ~i_count;
-                #(350*lp_max_clock_buf) i_type <= ~i_type;
-                #(500*lp_max_clock_buf) i_count <= ~i_count;
+                #(15*MaxClockBuf) i_reset <= ~i_reset;
+                #(40*MaxClockBuf) i_reset <= ~i_reset;
+                #(60*MaxClockBuf) i_set <= ~i_set;
+                #(80*MaxClockBuf) i_set <= ~i_set;
+                #(130*MaxClockBuf) i_pause <= ~i_pause;
+                #(170*MaxClockBuf) i_pause <= ~i_pause;
+                #(230*MaxClockBuf) i_type <= ~i_type;
+                #(300*MaxClockBuf) i_count <= ~i_count;
+                #(350*MaxClockBuf) i_type <= ~i_type;
+                #(500*MaxClockBuf) i_count <= ~i_count;
             end
             
             // block 3 - clock print

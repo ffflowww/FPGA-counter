@@ -8,12 +8,7 @@ module top_entity #(
     input logic i_pause,  // port: pause programm
     input logic i_count,  // port: HIGH - increment (LOW - shift to the left)
     input logic i_type,  // port: signal HIGH - DEC, otherwise - BIN 
-    
-//    output logic [6:0] o_HEX0,
-//    output logic [6:0] o_HEX1,
-//    output logic [6:0] o_HEX2,
-//    output logic [6:0] o_HEX3,
-//    output logic [6:0] o_HEX4,
+
     output logic [6:0] o_HEXs[4:0],
     output logic [4:0] o_LEDs,
     output logic o_sync_clock  // right clock
