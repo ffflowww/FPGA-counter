@@ -19,14 +19,19 @@ module top_entity #(
     logic w_clock;  // wire between clock devider and counter
     logic [6:0] w_bin_HEXs[4:0];
     logic [6:0] w_dec_HEXs[4:0];
+    
+    // inner wires for output registers
+    logic [6:0] w_reg_HEXs[4:0];
+    logic [4:0] w_reg_LEDs;
+    
     assign o_sync_clock = w_clock;
     
     // Modules
     clock_divider #(
         .Frequency(Frequency)
     ) main_clock_divider (   
-        .i_clock_50mhz(i_clock_50mhz),
-        .i_reset(i_reset),
+        .i_clock_50mhz,
+        .i_reset,
         
         .o_clk(w_clock)
     );
@@ -34,11 +39,11 @@ module top_entity #(
     counter #(
         .Initial(Initial)
     ) main_counter (   
-        .i_set(i_set),
-        .i_reset(i_reset),
+        .i_set,
+        .i_reset,
         .i_clk(w_clock),
-        .i_pause(i_pause),
-        .i_count(i_count),
+        .i_pause,
+        .i_count,
         
         .o_data(w_data)
     );
@@ -46,7 +51,7 @@ module top_entity #(
     led_decoder main_led_decoder (   
         .i_data(w_data),
         
-        .o_LEDs
+        .o_LEDs(w_reg_LEDs)
     );
     
     bin_decoder main_bin_decoder (   
@@ -66,9 +71,15 @@ module top_entity #(
         .i_dec_HEXs(w_dec_HEXs),
         .i_type,
         
-        .o_HEXs
-);
+        .o_HEXs(w_reg_HEXs)
+    );
     
-    
+    extra_registers main_extra_registers(
+        .i_HEXs(w_reg_HEXs),
+        .i_LEDs(w_reg_LEDs),
+        
+        .o_HEXs,
+        .o_LEDs
+    );
 
 endmodule
