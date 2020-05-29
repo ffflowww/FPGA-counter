@@ -17,6 +17,8 @@ module test;
     
     localparam logic [31:0] MaxClockBuf = 50000000 / (Frequency * 2);
     
+    logic [63:0] clock_tick_buf = 0;
+    
     top_entity #(
         .Frequency(Frequency),
         .Initial(Initial)
@@ -38,22 +40,23 @@ module test;
             
             // block 2 - signals' vectors
             begin
-                #(15*MaxClockBuf) i_reset <= ~i_reset;
-                #(40*MaxClockBuf) i_reset <= ~i_reset;
-                #(60*MaxClockBuf) i_set <= ~i_set;
-                #(80*MaxClockBuf) i_set <= ~i_set;
-                #(130*MaxClockBuf) i_pause <= ~i_pause;
-                #(170*MaxClockBuf) i_pause <= ~i_pause;
-                #(230*MaxClockBuf) i_type <= ~i_type;
-                #(300*MaxClockBuf) i_count <= ~i_count;
-                #(350*MaxClockBuf) i_type <= ~i_type;
-                #(500*MaxClockBuf) i_count <= ~i_count;
+                #(5*MaxClockBuf) i_reset <= ~i_reset;
+                #(10*MaxClockBuf) i_reset <= ~i_reset;
+                #(15*MaxClockBuf) i_set <= ~i_set;
+                #(20*MaxClockBuf) i_set <= ~i_set;
+                #(25*MaxClockBuf) i_pause <= ~i_pause;
+                #(30*MaxClockBuf) i_pause <= ~i_pause;
+                #(40*MaxClockBuf) i_type <= ~i_type;
+                #(60*MaxClockBuf) i_count <= ~i_count;
+                #(70*MaxClockBuf) i_type <= ~i_type;
+                #(90*MaxClockBuf) i_count <= ~i_count;
             end
             
             // block 3 - clock print
             forever begin
                 @(posedge o_sync_clock);
-                $display ("real clock tick: %t\n",$time());
+                clock_tick_buf += 64'd1;
+                $display ("Modulated clock tick: %d\n", clock_tick_buf);
             end
         join
     end
