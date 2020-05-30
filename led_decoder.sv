@@ -4,6 +4,6 @@ module led_decoder(
     output logic [4:0] o_LEDs
 );
 
-assign o_LEDs = i_data;  // shows data on LEDs
+assign o_LEDs = i_data;  // passing data to LEDs
 
 endmodule

@@ -12,74 +12,79 @@ module top_entity #(
     output logic [6:0] o_HEXs[4:0],
     output logic [4:0] o_LEDs,
     output logic o_sync_clock  // right clock
-    );
+);
     
-    // inner wires
-    logic [4:0] w_data;  // wire between modules
-    logic w_clock;  // wire between clock devider and counter
-    logic [6:0] w_bin_HEXs[4:0];
-    logic [6:0] w_dec_HEXs[4:0];
-    
-    // inner wires for output registers
-    logic [6:0] w_reg_HEXs[4:0];
-    logic [4:0] w_reg_LEDs;
-    
-    assign o_sync_clock = w_clock;
-    
-    // Modules
-    clock_divider #(
-        .Frequency(Frequency)
-    ) main_clock_divider (   
-        .i_clock_50mhz,
-        .i_reset,
-        
-        .o_clk(w_clock)
-    );
-    
-    counter #(
-        .Initial(Initial)
-    ) main_counter (   
-        .i_set,
-        .i_reset,
-        .i_clk(w_clock),
-        .i_pause,
-        .i_count,
-        
-        .o_data(w_data)
-    );
-    
-    led_decoder main_led_decoder (   
-        .i_data(w_data),
-        
-        .o_LEDs(w_reg_LEDs)
-    );
-    
-    bin_decoder main_bin_decoder (   
-        .i_data(w_data),
-        
-        .o_bin_HEXs(w_bin_HEXs)
-    );
-    
-    dec_decoder main_dec_decoder (   
-        .i_data(w_data),
-        
-        .o_dec_HEXs(w_dec_HEXs)
-    );
-    
-    multiplexer main_multiplexer(
-        .i_bin_HEXs(w_bin_HEXs),
-        .i_dec_HEXs(w_dec_HEXs),
-        .i_type,
-        
-        .o_HEXs(w_reg_HEXs)
-    );
-    
-    extra_registers main_extra_registers(
-        .i_HEXs(w_reg_HEXs),
-        .i_LEDs(w_reg_LEDs),
-        
-        .o_HEXs,
-        .o_LEDs
-    );
+// inner wires
+logic [4:0] w_data;  // wire between modules
+logic w_clock;  // wire between clock devider and counter
+logic [6:0] w_bin_HEXs[4:0];
+logic [6:0] w_dec_HEXs[4:0];
 
+// inner wires for output registers
+logic [6:0] w_reg_HEXs[4:0];
+logic [4:0] w_reg_LEDs;
+
+assign o_sync_clock = w_clock;
+
+// Modules
+clock_divider #(
+    .Frequency(Frequency)
+) main_clock_divider (   
+    .i_clock_50mhz,
+    .i_reset,
+    
+    .o_clk(w_clock)
+);
+
+counter #(
+    .Initial(Initial)
+) main_counter (
+    .i_clk(w_clock),
+    .i_reset,
+    .i_set,
+    .i_pause,
+    .i_count,
+    
+    .o_data(w_data)
+);
+
+led_decoder main_led_decoder (   
+    .i_data(w_data),
+    
+    .o_LEDs(w_reg_LEDs)
+);
+
+bin_decoder main_bin_decoder (
+    .i_clk(w_clock),
+    .i_reset,
+    .i_data(w_data),
+    
+    .o_bin_HEXs(w_bin_HEXs)
+);
+
+dec_decoder main_dec_decoder (
+    .i_clk(w_clock),
+    .i_reset,
+    .i_data(w_data),
+    
+    .o_dec_HEXs(w_dec_HEXs)
+);
+
+multiplexer main_multiplexer(
+    .i_bin_HEXs(w_bin_HEXs),
+    .i_dec_HEXs(w_dec_HEXs),
+    .i_type,
+    
+    .o_HEXs(w_reg_HEXs)
+);
+
+extra_registers main_extra_registers(
+    .i_clk(w_clock),
+    .i_reset,
+    .i_HEXs(w_reg_HEXs),
+    .i_LEDs(w_reg_LEDs),
+    
+    .o_HEXs,
+    .o_LEDs
+);
 endmodule
