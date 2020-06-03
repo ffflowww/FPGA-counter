@@ -1,6 +1,6 @@
 module top_entity #(
     parameter Initial = 5'b 01001,
-    parameter Frequency = 10000  // needed frequency
+    parameter Frequency = 1  // needed frequency
 ) (
     input logic i_clock_50mhz,  // сlock 50mhz
     input logic i_reset,  // port: reset
@@ -19,6 +19,7 @@ logic [4:0] w_data;  // wire between modules
 logic w_clock;  // wire between clock devider and counter
 logic [6:0] w_bin_HEXs[4:0];
 logic [6:0] w_dec_HEXs[4:0];
+logic [4:0] w_LEDs;
 
 // inner wires for output registers
 logic [6:0] w_reg_HEXs[4:0];
@@ -48,14 +49,16 @@ counter #(
     .o_data(w_data)
 );
 
-led_decoder main_led_decoder (   
+led_decoder main_led_decoder (
+    .i_clk(i_clock_50mhz),
+    .i_reset,
     .i_data(w_data),
     
-    .o_LEDs(w_reg_LEDs)
+    .o_LEDs(w_LEDs)
 );
 
 bin_decoder main_bin_decoder (
-    .i_clk(w_clock),
+    .i_clk(i_clock_50mhz),
     .i_reset,
     .i_data(w_data),
     
@@ -63,7 +66,7 @@ bin_decoder main_bin_decoder (
 );
 
 dec_decoder main_dec_decoder (
-    .i_clk(w_clock),
+    .i_clk(i_clock_50mhz),
     .i_reset,
     .i_data(w_data),
     
@@ -73,14 +76,15 @@ dec_decoder main_dec_decoder (
 multiplexer main_multiplexer(
     .i_bin_HEXs(w_bin_HEXs),
     .i_dec_HEXs(w_dec_HEXs),
+    .i_LEDs(w_LEDs),
     .i_type,
     
-    .o_HEXs(w_reg_HEXs)
+    .o_HEXs(w_reg_HEXs),
+    .o_LEDs(w_reg_LEDs)
 );
 
 extra_registers main_extra_registers(
-    .i_clk(w_clock),
-    .i_reset,
+    .i_clk(i_clock_50mhz),
     .i_HEXs(w_reg_HEXs),
     .i_LEDs(w_reg_LEDs),
     
